@@ -40,7 +40,7 @@ resource "azapi_resource" "ls_databricks" {
       typeProperties = {
         domain            = var.databricks_workspace_url
         accessToken = {
-          type  = "SecureString"       # tipo obrigatório
+          type  = "SecureString"       
           value = var.databricks_token
         }
         existingClusterId = var.databricks_cluster_id
@@ -56,7 +56,7 @@ resource "azapi_resource" "ls_databricks" {
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "ls_blob" {
   name              = "ls_blobsource"
   data_factory_id   = azurerm_data_factory.adf.id
-  sas_uri           = "https://stdatalakebatchdev001.blob.core.windows.net/?sv=2024-11-04&ss=bfqt&srt=sco&sp=rwdlacupyx&se=2025-08-20T22:42:35Z&st=2025-08-19T14:27:35Z&spr=https&sig=E2wS3qdM0wt%2FPRlbfxLMCMJU77EpZNUqq%2FKHRQ2ZfJY%3D"
+  sas_uri           = "https://stdatalakebatchdev001.blob.core.windows.net/?sv=2024-11-04&ss=bfqt&srt=sco&sp=rwdlacupyx&se=2025-08-30T00:46:38Z&st=2025-08-25T16:31:38Z&spr=https&sig=Tr7DMbuvBMvy5AK0FSXUL7jUVOu6s6NuVOpIAORLk2I%3D"
 }
 
 
@@ -212,8 +212,8 @@ JSON
 
 
 
-
-
+#7. Cria um pipeline no Data Factory que orquestra a execução do pipeline de cópia de dados (pipeline_copy_to_bronze) 
+# e o notebook Databricks (Bronze_Access_DataLake) para transformar os dados na camada bronze para a camada silver e gold.
 resource "azurerm_data_factory_pipeline" "pipeline_orchestrator" {
   name            = "pipeline_orchestrator"
   data_factory_id = azurerm_data_factory.adf.id
@@ -221,7 +221,6 @@ resource "azurerm_data_factory_pipeline" "pipeline_orchestrator" {
   depends_on = [
     azurerm_data_factory_pipeline.copy_to_bronze,
     azapi_resource.ls_databricks
-
   ]
 
   activities_json = <<JSON
@@ -251,7 +250,51 @@ resource "azurerm_data_factory_pipeline" "pipeline_orchestrator" {
       "type": "LinkedServiceReference"
     },
     "typeProperties": {
-      "notebookPath": "/Users/fernando.dataclub@outlook.com/acess_azure_data_lake_using_acess_key",
+      "notebookPath": "/Workspace/Users/fernando.dataclub@outlook.com/Bronze_Access_DataLake",
+      "baseParameters": {
+        "bronze_path": "abfss://bronze@stdatalakebatchdev001.dfs.core.windows.net/data/",
+        "silver_path": "abfss://silver@stdatalakebatchdev001.dfs.core.windows.net/processed/",
+        "gold_path": "abfss://gold@stdatalakebatchdev001.dfs.core.windows.net/final/"
+      }
+    }
+  },
+  {
+    "name": "RunSilverTransformacaoNotebook",
+    "type": "DatabricksNotebook",
+    "dependsOn": [
+      {
+        "activity": "RunDatabricksNotebook",
+        "dependencyConditions": ["Succeeded"]
+      }
+    ],
+    "linkedServiceName": {
+      "referenceName": "ls_databricks",
+      "type": "LinkedServiceReference"
+    },
+    "typeProperties": {
+      "notebookPath": "/Workspace/Users/fernando.dataclub@outlook.com/Silver_Transformacao",
+      "baseParameters": {
+        "bronze_path": "abfss://bronze@stdatalakebatchdev001.dfs.core.windows.net/data/",
+        "silver_path": "abfss://silver@stdatalakebatchdev001.dfs.core.windows.net/processed/",
+        "gold_path": "abfss://gold@stdatalakebatchdev001.dfs.core.windows.net/final/"
+      }
+    }
+  },
+  {
+    "name": "RunGoldTransformacaoNotebook",
+    "type": "DatabricksNotebook",
+    "dependsOn": [
+      {
+        "activity": "RunSilverTransformacaoNotebook",
+        "dependencyConditions": ["Succeeded"]
+      }
+    ],
+    "linkedServiceName": {
+      "referenceName": "ls_databricks",
+      "type": "LinkedServiceReference"
+    },
+    "typeProperties": {
+      "notebookPath": "/Workspace/Users/fernando.dataclub@outlook.com/Gold_Agregacao",
       "baseParameters": {
         "bronze_path": "abfss://bronze@stdatalakebatchdev001.dfs.core.windows.net/data/",
         "silver_path": "abfss://silver@stdatalakebatchdev001.dfs.core.windows.net/processed/",
@@ -262,6 +305,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_orchestrator" {
 ]
 JSON
 }
+
 
 
 

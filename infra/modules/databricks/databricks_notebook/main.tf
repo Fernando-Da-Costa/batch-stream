@@ -4,7 +4,7 @@ provider "databricks" {
 }
 
 resource "databricks_notebook" "bronze" {
-  path     = "/Shared/Bronze_Access_DataLake"
+  path     = "/Users/fernando.dataclub@outlook.com/Bronze_Access_DataLake"
   language = "PYTHON"
   content_base64 = base64encode(
         file("../consumer/databricks_notebooks/Bronze_Access_DataLake.py")
@@ -13,7 +13,7 @@ resource "databricks_notebook" "bronze" {
 
 
 resource "databricks_notebook" "silver" {
-  path     = "/Shared/Silver_Transformacao"
+  path     = "/Users/fernando.dataclub@outlook.com/Silver_Transformacao"
   language = "PYTHON"
   content_base64 = base64encode(
     file("../consumer/databricks_notebooks/Silver_Transformacao.py")
@@ -22,7 +22,7 @@ resource "databricks_notebook" "silver" {
 
 
 resource "databricks_notebook" "gold" {
-  path     = "/Shared/Gold_Agregacao"
+  path     = "/Users/fernando.dataclub@outlook.com/Gold_Agregacao"
   language = "PYTHON"
   content_base64 = base64encode(
     file("../consumer/databricks_notebooks/Gold_Agregacao.py")

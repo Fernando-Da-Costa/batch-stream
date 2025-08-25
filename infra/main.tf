@@ -130,5 +130,19 @@ module "databricks_access_connector" {
 # }
 
 
+# Criando workspace, firewall e external table para consultar Parquet
+module "synapse" {
+  source              = "./modules/synapse_workspace"
+  workspace_name      = var.workspace_name
+  resource_group      = module.resource_group.name
+  location            = var.location
+  adls_filesystem_id  = module.datalake.adls_filesystem_id
+  sql_admin_user      = "sqladmin"
+  sql_admin_password  = "SuperSecret123!"
+  my_ip               = "123.45.67.89"  # se precisar liberar IP no firewall
+}
+
+
+
 
 
