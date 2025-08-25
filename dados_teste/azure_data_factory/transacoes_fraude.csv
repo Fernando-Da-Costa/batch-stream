@@ -1,0 +1,6 @@
+ID_Transacao,Data,Hora,Tipo,Valor,Descrição,Conta_Origem,Conta_Destino,Localização_IP,Dispositivo,Status,Flag_Fraude
+T001,2025-08-18,09:15,Débito,250.00,Pagamento de energia,1234-5,EmpresaEnergia,192.168.1.10,Mobile,Concluída,N
+T002,2025-08-18,11:30,Crédito,1500.00,Depósito salário,EmpresaX,1234-5,10.0.0.5,Desktop,Concluída,N
+T003,2025-08-19,08:45,Débito,75.50,Compra supermercado,1234-5,SupermercadoABC,172.16.0.2,Mobile,Concluída,N
+T004,2025-08-19,14:20,Débito,12000.00,Transferência Pix,1234-5,5678-9,203.0.113.5,Mobile,Concluída,S
+T005,2025-08-20,02:15,Débito,5000.00,Transferência internacional,1234-5,ContaExterna,198.51.100.7,Tablet,Pendente,S

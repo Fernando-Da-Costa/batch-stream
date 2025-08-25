@@ -1,0 +1,61 @@
+# === Terraform ===
+*.tfstate
+*.tfstate.*
+.terraform/
+.crash/
+*.tfplan
+*.backup
+.terraform.lock.hcl
+.terraform/
+.tfplan/
+infra/tfplan
+infra/terraform.tfstate
+payload.json
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.env
+.venv/
+env/
+venv/
+pip-wheel-metadata/
+*.log
+*.sqlite3
+listar_as_pastas_do_datalake.ipynb
+consumer/listar_as_pastas_do_datalake.ipynb
+consumer/databricks_notebooks/Bronze_Access_DataLake.py
+consumer/databricks_notebooks/Silver_Transformacao.py
+consumer/databricks_notebooks/Gold_Agregacao.py
+
+# === VSCode ===
+.vscode/
+*.code-workspace
+
+# === Docker ===
+*.tar
+*.log
+
+# === Kubernetes secrets ===
+*secret*.yaml
+
+# === CI/CD ===
+# Azure DevOps / GitHub Actions artifacts (caso use)
+*.coverage
+coverage.*
+*.log
+*.pytest_cache/
+*.mypy_cache/
+*.tox/
+.nox/
+*.tfvars
+*.ipynb
+test-results/
+teste.py
+# === OS Files ===
+.DS_Store
+Thumbs.db

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventhub-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventhub-producer
+  template:
+    metadata:
+      labels:
+        app: eventhub-producer
+    spec:
+      containers:
+      - name: eventhub-producer
+        image: acrbatchstreamingdev.azurecr.io/eventhub-producer:latest
+        env:
+        - name: EVENT_HUB_CONN_STR
+          valueFrom:
+            secretKeyRef:
+              name: eventhub-connection
+              key: connection-string
+        - name: EVENT_HUB_NAME
+          value: "eh-streaming-data-dev"
+
+              
+

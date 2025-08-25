@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-producer
+  labels:
+    app: event-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-producer
+  template:
+    metadata:
+      labels:
+        app: event-producer
+    spec:
+      containers:
+        - name: producer
+          image: <sua-imagem-producer>  # Substitua pelo caminho real no ACR ou Docker Hub
+          ports:
+            - containerPort: 5000
+          env:
+            - name: EVENT_HUB_CONN_STR
+              valueFrom:
+                secretKeyRef:
+                  name: eventhub-secret
+                  key: connectionString
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-producer-svc
+spec:
+  selector:
+    app: event-producer
+  ports:
+    - protocol: TCP
+      port: 80         # Porta exposta no cluster
+      targetPort: 5000 # Porta interna do container (Flask ou FastAPI por exemplo)
+  type: ClusterIP

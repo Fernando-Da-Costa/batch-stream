@@ -1,0 +1,95 @@
+/infra/
+  ├─ main.tf
+  ├─ variables.tf
+  ├─ outputs.tf
+  └─ modules/
+       ├─ aks/
+       ├─ databricks/
+       ├─ eventhub/
+       ├─ adls/
+       └─ keyvault/
+/src/
+  ├─ batch_job/
+  │    └─ process_csv_to_parquet.py
+  └─ streaming_job/
+       └─ eventhub_to_delta.py
+/deploy/
+  └─ kubernetes/
+       └─ deployment.yaml
+/ci-cd/
+  └─ azure-pipelines.yml
+
+
+
+
+
+1. Grupos de recursos
+
+    Resource Group:
+    Nome: rg-databricks-batchstreaming-dev
+    Localização: eastus
+
+
+2. Contas de armazenamento
+
+    Storage Account (Data Lake):
+    Nome: tfstatebatchstreaming
+    Tipo: StorageV2
+    Localização: eastus
+
+
+3. Contas de armazenamento depois em armazenamento de dados -> (Container)
+    Data Lake Filesystem:
+    Nome: datalake
+    URL: https://stdatalakebatchdev.dfs.core.windows.net/datalake
+
+
+
+4. Hubs de Eventos
+
+    Event Hub:
+    Nome: eh-streaming-data-dev
+    Partições: 2
+    Message Retention: 1 dia
+
+
+
+5. Dentro do Hubs de Eventos
+
+    Event Hub:
+    Nome: eh-streaming-data-dev
+    Partições: 2
+    Message Retention: 1 dia
+
+
+6. Serviços do Kubernetes.
+
+    AKS Cluster:
+    Nome: aks-batchstreaming-dev
+    Localização: eastus
+    Versão do Kubernetes: 1.27.102
+    Node Pool: 1 nó com VM Standard_D2s_v3
+    Network Plugin: kubenet
+    Load Balancer: standard
+    SKU: Premium
+    Support Plan: AKSLongTermSupport
+
+
+7. Azure Databricks.
+
+    Databricks Workspace:
+    Nome: dbw-batchstreaming-dev
+    Localização: eastus
+    SKU: standard
+
+
+8. Cofre de chaves.
+
+    Key Vault:
+    Nome: kv-batchstreaming-dev
+    Localização: eastus
+    SKU: standard
+
+
+
+

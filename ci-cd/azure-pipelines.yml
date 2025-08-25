@@ -1,0 +1,46 @@
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  TF_VAR_environment: "dev"
+  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+  ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+stages:
+  - stage: TerraformInitPlan
+    displayName: 'Terraform Init & Plan'
+    jobs:
+      - job: plan
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.x'
+
+          - script: |
+              cd infra
+              terraform init -input=false
+              terraform plan -out=tfplan -input=false
+            displayName: 'Terraform Init & Plan'
+
+  - stage: TerraformApply
+    displayName: 'Terraform Apply'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: apply
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+
+          - script: |
+              cd infra
+              terraform apply -auto-approve tfplan
+            displayName: 'Terraform Apply'
