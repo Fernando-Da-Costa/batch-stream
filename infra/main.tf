@@ -139,7 +139,7 @@ module "synapse" {
   adls_filesystem_id  = module.datalake.adls_filesystem_id
   sql_admin_user      = "sqladmin"
   sql_admin_password  = "SuperSecret123!"
-  my_ip               = "123.45.67.89"  # se precisar liberar IP no firewall
+  my_ip               = "200.149.56.197"  # se precisar liberar IP no firewall
 }
 
 
