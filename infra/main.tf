@@ -6,14 +6,35 @@ module "resource_group" {
 }
 
 
-# module "eventhub" {
-#   source              = "./modules/eventhub"
-#   resource_group_name = module.resource_group.name
-#   location           = var.location
-#   namespace_name     = var.namespace_name
-#   eventhub_name      = var.eventhub_name
-#   tags               = local.common_tags
-# }
+################################################################################################################
+# Criando a namespace
+module "eventhub_namespace" {
+  source              = "./modules/eventhub/eventhub_namespace"
+  resource_group_name = module.resource_group.name
+  location            = var.location
+  namespace_name      = var.namespace_name
+  tags                = local.common_tags
+}
+# Lista de Event Hubs
+locals {
+  eventhub = {
+    streaming  = var.eventhub_name
+    databricks = var.eventhub_name_databricks
+  }
+}
+# Criando Event Hubs com for_each
+module "eventhub" {
+  source              = "./modules/eventhub"
+  for_each            = local.eventhub
+  resource_group_name = module.resource_group.name
+  location            = var.location
+  namespace_name      = module.eventhub_namespace.namespace_name
+  namespace_id        = module.eventhub_namespace.namespace_id
+  eventhub_name       = each.value
+  tags                = local.common_tags
+}
+################################################################################################################################
+
 
 
 # module "keyvault" {
@@ -153,6 +174,11 @@ module "observability_core" {
   synapse_id          = module.synapse.workspace_id
   databricks_id       = module.databricks.workspace_id
   datalake_id         = module.datalake.storage_account_id
+  datadog_api_key     = var.datadog_api_key
+  datadog_app_key     = var.datadog_app_key
+  eventhub_name                  = module.eventhub["databricks"].eventhub_name
+  eventhub_authorization_rule_id = module.eventhub["streaming"].eventhub_auth_rule_id
+
 }
 
 
@@ -164,6 +190,8 @@ resource "azurerm_role_assignment" "nsg_write_access" {
   role_definition_name = "Network Contributor"
   principal_id         = var.service_principal_object_id
 }
+
+
 
 # Logs centrais Firewall, NSG, VNet Flow Logs
 module "observability_network" {
@@ -181,8 +209,6 @@ module "observability_network" {
 module "observability_datadog" {
   source               = "./modules/observability/datadog"
   datadog_monitor_name = "dd-monitor-batchstreaming"
-  #location             = var.location
-  #resource_group_name  = module.resource_group.name
   log_analytics_id     = module.observability_core.log_analytics_id
   datadog_api_key = var.datadog_api_key
   datadog_app_key = var.datadog_app_key

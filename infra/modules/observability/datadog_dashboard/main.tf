@@ -35,19 +35,20 @@ resource "datadog_dashboard" "lakehouse" {
 
   # Logs de erro por serviço
   widget {
-    log_stream_definition {
-      title               = "Logs de erro por serviço"
-      query               = "status:error source:azure resource_group:{{rg}} resource_name:{{ws}}"
-      message_display     = "inline"
-      show_date_column    = true
-      show_message_column = true
+  log_stream_definition {
+    title               = "Logs de erro por serviço"
+    query               = "status:error source:azure resource_group:$rg resource_name:$ws"
+    message_display     = "inline"
+    show_date_column    = true
+    show_message_column = true
 
-      sort {
-        column = "time"
-        order  = "desc"
-      }
+    sort {
+      column = "time"
+      order  = "desc"
     }
   }
+}
+
 
 # Latência ADLS (logs de Storage)
 widget {
@@ -82,7 +83,7 @@ widget {
   widget {
   log_stream_definition {
     title               = "Databricks: Jobs com erro"
-    query               = "status:error source:azure resource_provider:Microsoft.Databricks resource_group:{{rg}} resource_name:{{ws}}"
+    query               = "status:error source:azure resource_provider:Microsoft.Databricks resource_group:$rg resource_name:$ws"
     message_display     = "inline"
     show_date_column    = true
     show_message_column = true

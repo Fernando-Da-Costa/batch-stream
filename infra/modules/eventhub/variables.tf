@@ -23,3 +23,8 @@ variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
 }
+
+variable "namespace_id" {
+  description = "ID of the Event Hub Namespace"
+  type        = string
+}

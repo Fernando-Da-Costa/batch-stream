@@ -18,6 +18,7 @@ provider "datadog" {
  
 }
 
+# Esse monitor alerta se a duração média dos jobs do Databricks ultrapassar 5 minutos nos últimos 5 minutos.
 resource "datadog_monitor" "batchstreaming" {
   name    = "dd-monitor-batchstreaming"
   type    = "metric alert"  

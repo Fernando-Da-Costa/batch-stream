@@ -27,3 +27,17 @@ variable "datalake_id" {
   type        = string
   description = "ID do Data Lake Gen2"
 }
+
+variable "eventhub_name" {
+  type        = string
+  description = "Nome do Event Hub para logs do Databricks"
+}
+
+variable "eventhub_authorization_rule_id" {
+  type        = string
+  description = "Authorization rule ID do Event Hub para o Databricks"
+}
+
+
+variable "datadog_api_key" { type = string }
+variable "datadog_app_key" { type = string }

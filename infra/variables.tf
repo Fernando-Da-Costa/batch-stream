@@ -141,3 +141,8 @@ variable "datadog_api_key" {
   type        = string
   description = "API Key do Datadog"
 }
+
+variable "eventhub_name_databricks" {
+  description = "Name of the Event Hub for Databricks"
+  type        = string
+}
