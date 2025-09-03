@@ -2,7 +2,6 @@ resource "azurerm_resource_provider_registration" "synapse" {
   name = "Microsoft.Synapse"
 }
 
-
 # Module: synapse_workspace
 resource "azurerm_synapse_workspace" "workspace" {
   name                                 = var.workspace_name
@@ -15,11 +14,9 @@ resource "azurerm_synapse_workspace" "workspace" {
   identity {
     type = "SystemAssigned"
   }
-
   depends_on = [azurerm_resource_provider_registration.synapse]
 
 }
-
 
 
 # Serverless SQL Pool não precisa criar, ele vem por default no workspace

@@ -139,10 +139,61 @@ module "synapse" {
   adls_filesystem_id  = module.datalake.adls_filesystem_id
   sql_admin_user      = "sqladmin"
   sql_admin_password  = "SuperSecret123!"
-  my_ip               = "200.149.56.197"  # se precisar liberar IP no firewall
+  my_ip               = "200.149.56.197" 
+}
+
+
+
+# Logs centrais (Log Analytics, Data Lake, Synapse, Databricks)
+module "observability_core" {
+  source              = "./modules/observability/core"
+  log_analytics_name  = "law-batchstreaming"
+  location            = var.location
+  resource_group_name = module.resource_group.name
+  synapse_id          = module.synapse.workspace_id
+  databricks_id       = module.databricks.workspace_id
+  datalake_id         = module.datalake.storage_account_id
 }
 
 
 
 
+# Tirar depois da aqui.
+resource "azurerm_role_assignment" "nsg_write_access" {
+  scope                = var.nsg_id
+  role_definition_name = "Network Contributor"
+  principal_id         = var.service_principal_object_id
+}
 
+# Logs centrais Firewall, NSG, VNet Flow Logs
+module "observability_network" {
+  source                      = "./modules/observability/network"
+  log_analytics_id            = module.observability_core.log_analytics_id
+  nsg_id                      = var.nsg_id
+  resource_group_name         = var.resource_group_name     
+  location                    = var.location                
+  flowlog_storage_account_id  = module.datalake.storage_account_id 
+}
+
+
+
+# Integração com Datadog
+module "observability_datadog" {
+  source               = "./modules/observability/datadog"
+  datadog_monitor_name = "dd-monitor-batchstreaming"
+  #location             = var.location
+  #resource_group_name  = module.resource_group.name
+  log_analytics_id     = module.observability_core.log_analytics_id
+  datadog_api_key = var.datadog_api_key
+  datadog_app_key = var.datadog_app_key
+}
+
+
+# Cria um dashboard e monitores no Datadog para centralizar métricas e logs do seu Lakehouse (Synapse, Databricks, ADLS) filtrados por resource_group e env
+module "observability_dd_dashboard" {
+  source              = "./modules/observability/datadog_dashboard"
+  resource_group_name = module.resource_group.name
+  env                 = var.environment
+  datadog_api_key     = var.datadog_api_key
+  datadog_app_key     = var.datadog_app_key 
+}

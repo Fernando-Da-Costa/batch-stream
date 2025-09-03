@@ -31,9 +31,6 @@ az datafactory dataset list \
 
 
 
-
-
-
 1 - No databricks ao criar um cluster, tipo works tem que ser (Standard_D2ds_v6) para testar  Min. 1 Máx.2 Atual 1
 2 - Dentro do databricks ir em configurações/programador e criar um token exemplo PET_INICIO. (databricks_token) No arquivo variables.tf, adicionar a variável databricks_token.
 3 - lá nas libs do databricks criar:
@@ -43,3 +40,8 @@ az datafactory dataset list \
           com.azure:azure-identity:1.8.0
 
 
+
+
+curl -X GET "https://api.datadoghq.com/api/v1/validate" \
+  -H "DD-API-KEY: f4f871bb9dad86006a9d9b326cf64105" \
+  -H "DD-APPLICATION-KEY: 5731c1a20724ddae9132cb74b3652165303bb436"

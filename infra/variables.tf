@@ -121,3 +121,23 @@ variable "databricks_cluster_id" {
   description = "ID do cluster existente no Databricks (ou vazio para criar newCluster)"
   default     = ""
 }
+
+variable "nsg_id" {
+  type        = string
+  description = "ID do Network Security Group"
+}
+
+variable "service_principal_object_id" {
+  type        = string
+  description = "Object ID do Service Principal"
+}
+
+variable "datadog_app_key" {
+  type        = string
+  description = "App Key do Datadog"
+}
+
+variable "datadog_api_key" {
+  type        = string
+  description = "API Key do Datadog"
+}
