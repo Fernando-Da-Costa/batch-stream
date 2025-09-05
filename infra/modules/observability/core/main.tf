@@ -27,17 +27,42 @@ resource "azurerm_log_analytics_workspace" "this" {
 
 # Configura diagnóstico para Synapse
 resource "azurerm_monitor_diagnostic_setting" "synapse" {
-  name                       = "diag-synapse"
-  target_resource_id         = var.synapse_id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+  name                            = "diag-synapse"
+  target_resource_id              = var.synapse_id
+  eventhub_authorization_rule_id  = var.eventhub_authorization_rule_synapse_id
+  eventhub_name                   = var.eventhub_name_synapse
 
   enabled_log {
     category = "GatewayApiRequests"
   }
+
+  enabled_log {
+    category = "SynapseRBACOperations"
+  }
+
+  enabled_log {
+    category = "IntegrationPipelineRuns"
+  }
+
+  enabled_log {
+    category = "IntegrationActivityRuns"
+  }
+
+  enabled_log {
+    category = "IntegrationTriggerRuns"
+  }
+
+  enabled_log {
+    category = "SynapseLinkEvent"
+  }
+
   enabled_metric {
     category = "AllMetrics"
   }
 }
+
+
+
 
 
 # Configura diagnóstico para Databricks enviando ao Event Hub
@@ -46,7 +71,6 @@ resource "azurerm_monitor_diagnostic_setting" "databricks" {
   target_resource_id              = var.databricks_id
   eventhub_name                   = var.eventhub_name
   eventhub_authorization_rule_id  = var.eventhub_authorization_rule_id
-
 
   dynamic "enabled_log" {
     for_each = toset([

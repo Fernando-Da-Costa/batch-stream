@@ -59,3 +59,5 @@ teste.py
 # === OS Files ===
 .DS_Store
 Thumbs.db
+envio_log_datadog_test_.py
+envio_log_hub_.py

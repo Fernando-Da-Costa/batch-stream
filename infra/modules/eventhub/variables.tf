@@ -28,3 +28,8 @@ variable "namespace_id" {
   description = "ID of the Event Hub Namespace"
   type        = string
 }
+
+variable "namespace_synapse_id" {
+  description = "ID of the Event Hub Namespace"
+  type        = string
+}

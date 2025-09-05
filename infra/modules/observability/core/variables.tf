@@ -38,6 +38,15 @@ variable "eventhub_authorization_rule_id" {
   description = "Authorization rule ID do Event Hub para o Databricks"
 }
 
+variable "eventhub_authorization_rule_synapse_id" {
+  type        = string
+  description = "Authorization rule ID do Event Hub para o Synapse"
+}
+
+variable "eventhub_name_synapse" {
+  type        = string
+  description = "Nome do Event Hub para logs do Synapse"
+}
 
 variable "datadog_api_key" { type = string }
 variable "datadog_app_key" { type = string }

@@ -20,6 +20,7 @@ locals {
   eventhub = {
     streaming  = var.eventhub_name
     databricks = var.eventhub_name_databricks
+    synapse    = "synapse-logs"
   }
 }
 # Criando Event Hubs com for_each
@@ -30,11 +31,11 @@ module "eventhub" {
   location            = var.location
   namespace_name      = module.eventhub_namespace.namespace_name
   namespace_id        = module.eventhub_namespace.namespace_id
+  namespace_synapse_id        = module.eventhub_namespace.namespace_synapse_id
   eventhub_name       = each.value
   tags                = local.common_tags
 }
 ################################################################################################################################
-
 
 
 # module "keyvault" {
@@ -178,8 +179,11 @@ module "observability_core" {
   datadog_app_key     = var.datadog_app_key
   eventhub_name                  = module.eventhub["databricks"].eventhub_name
   eventhub_authorization_rule_id = module.eventhub["streaming"].eventhub_auth_rule_id
+  eventhub_name_synapse          = module.eventhub["synapse"].synapse_eh_hub_name
+  eventhub_authorization_rule_synapse_id = module.eventhub["synapse"].synapse_eh_auth_id
 
 }
+
 
 
 

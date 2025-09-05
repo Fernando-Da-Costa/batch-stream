@@ -42,6 +42,4 @@ az datafactory dataset list \
 
 
 
-curl -X GET "https://api.datadoghq.com/api/v1/validate" \
-  -H "DD-API-KEY: f4f871bb9dad86006a9d9b326cf64105" \
-  -H "DD-APPLICATION-KEY: 5731c1a20724ddae9132cb74b3652165303bb436"
+

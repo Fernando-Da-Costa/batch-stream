@@ -5,3 +5,6 @@ output "namespace_name" {
 output "namespace_id" {
   value = azurerm_eventhub_namespace.this.id
 }
+output "namespace_synapse_id" {
+  value = azurerm_eventhub_namespace.synapse_eh.id
+}
